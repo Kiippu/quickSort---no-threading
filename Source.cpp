@@ -5,8 +5,8 @@
 #include <chrono>
 #include <string>
 
-const int ARRAY_SIZE = 1000000;
-const int MAX_VALUE = 1000000;
+const int ARRAY_SIZE = 10000;
+const int MAX_VALUE = 10000;
 
 
 /// typedefs for easy type creation
@@ -14,6 +14,7 @@ using TIME_REGISTER = std::map <std::string, std::chrono::time_point<std::chrono
 using TIME_VECTOR_PAIR = std::pair<std::string, long long>;
 using TIME_VECTOR = std::vector<TIME_VECTOR_PAIR>;
 
+/// time registers on heap to keep stack clear
 std::shared_ptr<TIME_REGISTER> m_beginTimerList = std::make_shared<TIME_REGISTER>();
 std::shared_ptr<TIME_REGISTER> m_finishTimerList = std::make_shared<TIME_REGISTER>();
 std::shared_ptr<TIME_VECTOR> m_finalTimerSheetMs = std::make_shared<TIME_VECTOR>();
@@ -67,7 +68,6 @@ int section(std::vector<int>& array, const int left, const int right) {
 	// loop through section between leftPtr and rightPtr to find pivots correct placing
 	// while swapping  < and > values in array to pivot with each other 
 
-//#pragma omp parallel for 
 	while (*i_left <= *j_right) {
 		// find next element from left  that is more then pivotPtr
 		/// NOTE: checking for i_left and j_right are still valid
@@ -111,12 +111,15 @@ int main() {
 
 	std::cout << "Array size: " << std::to_string(ARRAY_SIZE) << std::endl;
 	std::cout << "Values: [1 - " << std::to_string(MAX_VALUE) << "]" << std::endl;
-	
+	//set timer
 	addStartTime("Quicksort Elapsed: ");
+	// run quicksort
 	quicksort(array, 0, arraySize - 1, arraySize);
+	// fi ihs timer
 	addFinishTime("Quicksort Elapsed: ");
-	
+	// print timesheet
 	printFinalTimeSheet();
-	print(array, arraySize);
+	/// uncomment to print result of sorted array
+	//print(array, arraySize);
 	return 0;
 }
